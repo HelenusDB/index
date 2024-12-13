@@ -1,3 +1,3 @@
 # HelenusDB Katalog
 
-**Distributed Transaction and Index Magic for Cassandra**
+**Distributed Transaction and Indexing Magic for Cassandra**
