@@ -1,2 +1,1 @@
-# diago
-# katalog
+# HelenusDB Katalog
