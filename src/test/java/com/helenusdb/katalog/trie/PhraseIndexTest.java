@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -54,14 +55,14 @@ class PhraseIndexTest
 		assertTrue(index.getIndicesFor(null).isEmpty());
 		assertTrue(index.getIndicesFor("notfound").isEmpty());
 
-		assertTrue(index.getIndicesFor("do").containsAll(List.of(DOG_INDEX, FOX_INDEX)));
-		assertTrue(index.getIndicesFor("og").containsAll(List.of(FOX_INDEX, DOG_INDEX)));
-		assertEquals(List.of(FOX_INDEX), index.getIndicesFor("fox"));
-		assertEquals(List.of(MOOSE_INDEX), index.getIndicesFor("moose"));
-		assertEquals(List.of(MOUSE_INDEX), index.getIndicesFor("mouse"));
-		assertEquals(List.of(FOX_INDEX), index.getIndicesFor("quick brown"));
-		assertTrue(index.getIndicesFor("want").containsAll(List.of(MOOSE_INDEX, MOUSE_INDEX)));
-		assertTrue(index.getIndicesFor("the").containsAll(List.of(FOX_INDEX, DOG_INDEX, MOOSE_INDEX, MOUSE_INDEX)));
+		assertTrue(index.getIndicesFor("do").containsAll(Set.of(DOG_INDEX, FOX_INDEX)));
+		assertTrue(index.getIndicesFor("og").containsAll(Set.of(FOX_INDEX, DOG_INDEX)));
+		assertEquals(Set.of(FOX_INDEX), index.getIndicesFor("fox"));
+		assertEquals(Set.of(MOOSE_INDEX), index.getIndicesFor("moose"));
+		assertEquals(Set.of(MOUSE_INDEX), index.getIndicesFor("mouse"));
+		assertEquals(Set.of(FOX_INDEX), index.getIndicesFor("quick brown"));
+		assertTrue(index.getIndicesFor("want").containsAll(Set.of(MOOSE_INDEX, MOUSE_INDEX)));
+		assertTrue(index.getIndicesFor("the").containsAll(Set.of(FOX_INDEX, DOG_INDEX, MOOSE_INDEX, MOUSE_INDEX)));
 	}
 
 }

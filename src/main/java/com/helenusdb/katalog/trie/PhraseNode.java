@@ -1,9 +1,9 @@
 package com.helenusdb.katalog.trie;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * PhraseNode is a node in PhraseIndex to store phrases and indices into their associated values.
@@ -19,14 +19,14 @@ class PhraseNode
 	 * The indices of the values associated with the phrase ending. Only populated
 	 * if this node is the end of a phrase (a leaf node).
 	 */
-	private List<Integer> indices = new ArrayList<>();
+	private Set<Integer> indices = new HashSet<>();
 
 	/**
 	 * Adds a child node to this node. If the child already exists, it is not replaced.
 	 *
 	 * @param c The character to index the child node by.
 	 */
-	public void addChild(char c)
+	public void addChildIfAbsent(char c)
 	{
 		children.putIfAbsent(c, new PhraseNode());
 	}
@@ -66,14 +66,24 @@ class PhraseNode
 	}
 
 	/**
-	 * Gets the list of indices in this leaf node. The list is unmodifiable to prevent
+	 * Gets the set of indices in this leaf node. The list is unmodifiable to prevent
 	 * modification of the internal state.
 	 * 
-	 * @return The list of indices (into the PhraseIndex) in this leaf node.
+	 * @return The set of indices (into the PhraseIndex) in this leaf node.
 	 */
-	public List<Integer> getIndices()
+	public Set<Integer> getIndices()
 	{
-		return Collections.unmodifiableList(indices);
+		return Collections.unmodifiableSet(indices);
+	}
+
+	/**
+	 * Checks if this node is a leaf node (i.e. has no children).
+	 *
+	 * @return True if this node is a leaf node, false otherwise.
+	 */
+	public boolean isLeaf()
+	{
+		return children.isEmpty();
 	}
 
 	@Override

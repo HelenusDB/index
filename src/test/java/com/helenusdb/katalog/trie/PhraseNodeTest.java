@@ -1,10 +1,16 @@
 package com.helenusdb.katalog.trie;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PhraseNodeTest
 {
@@ -14,7 +20,7 @@ class PhraseNodeTest
 		PhraseNode node = new PhraseNode();
 
 		// Add a child and retrieve it
-		node.addChild('a');
+		node.addChildIfAbsent('a');
 		PhraseNode childNode = node.getChild('a');
 
 		assertNotNull(childNode, "Child node for 'a' should exist.");
@@ -31,11 +37,11 @@ class PhraseNodeTest
 		PhraseNode node = new PhraseNode();
 
 		// Add a child and retrieve it
-		node.addChild('a');
+		node.addChildIfAbsent('a');
 		PhraseNode firstChild = node.getChild('a');
 
 		// Add the same child character again
-		node.addChild('a');
+		node.addChildIfAbsent('a');
 		PhraseNode secondChild = node.getChild('a');
 
 		assertSame(firstChild, secondChild, "Child nodes for duplicate additions should be the same instance.");
@@ -51,7 +57,7 @@ class PhraseNodeTest
 		node.addIndex(2);
 		node.addIndex(3);
 
-		List<Integer> indices = node.getIndices();
+		Set<Integer> indices = node.getIndices();
 
 		// Validate indices
 		assertEquals(3, indices.size(), "There should be 3 indices.");
@@ -68,7 +74,7 @@ class PhraseNodeTest
 		// Add an index
 		node.addIndex(1);
 
-		List<Integer> indices = node.getIndices();
+		Set<Integer> indices = node.getIndices();
 
 		// Validate unmodifiable behavior
 		assertThrows(UnsupportedOperationException.class, () -> indices.add(2), "Indices list should be unmodifiable.");
@@ -80,8 +86,8 @@ class PhraseNodeTest
 		PhraseNode node = new PhraseNode();
 
 		// Add children and indices
-		node.addChild('a');
-		node.addChild('b');
+		node.addChildIfAbsent('a');
+		node.addChildIfAbsent('b');
 		node.addIndex(1);
 
 		String expected = "PhraseNode{children=[a, b], indices=[1]}";

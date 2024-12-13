@@ -3,6 +3,7 @@ package com.helenusdb.katalog.trie;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This PhraseIndex stores values and associated phrases (like DB records associated with a string column), allowing
@@ -66,22 +67,22 @@ public class PhraseIndex<T>
 	 * @param query The query to search for.
 	 * @return The list of indices for the query. Never null.
 	 */
-	public List<Integer> getIndicesFor(String query)
+	public Set<Integer> getIndicesFor(String query)
 	{
-		if (query == null || query.isEmpty()) return Collections.emptyList();
+		if (query == null || query.isEmpty()) return Collections.emptySet();
 		PhraseNode current = root;
 
 		for (char c : query.toCharArray())
 		{
 			if (!current.containsChild(c))
 			{
-				return Collections.emptyList();
+				return Collections.emptySet();
 			}
 
 			current = current.getChild(c);
 		}
 
-		return Collections.unmodifiableList(current.getIndices());
+		return current.getIndices();
 	}
 
 	/**
@@ -96,7 +97,7 @@ public class PhraseIndex<T>
 
 		for (char c : suffix.toCharArray())
 		{
-			current.addChild(c);
+			current.addChildIfAbsent(c);
 			current = current.getChild(c);
 			current.addIndex(index);
 		}
