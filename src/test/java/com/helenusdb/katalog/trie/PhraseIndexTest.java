@@ -1,6 +1,7 @@
 package com.helenusdb.katalog.trie;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -32,8 +33,8 @@ class PhraseIndexTest
 		assertTrue(index.search(null).isEmpty());
 		assertTrue(index.search("notfound").isEmpty());
 
-		assertTrue(index.search("do").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
-		assertTrue(index.search("og").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
+		assertTrue(index.search("DO").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
+		assertTrue(index.search("OG").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
 		assertEquals(List.of(FOX_PHRASE), index.search("fox"));
 		assertEquals(List.of(MOOSE_PHRASE), index.search("moose"));
 		assertEquals(List.of(MOUSE_PHRASE), index.search("mouse"));
@@ -63,6 +64,25 @@ class PhraseIndexTest
 		assertEquals(Set.of(FOX_INDEX), index.getIndicesFor("quick brown"));
 		assertTrue(index.getIndicesFor("want").containsAll(Set.of(MOOSE_INDEX, MOUSE_INDEX)));
 		assertTrue(index.getIndicesFor("the").containsAll(Set.of(FOX_INDEX, DOG_INDEX, MOOSE_INDEX, MOUSE_INDEX)));
+	}
+
+	@Test
+	void shouldBeCaseSensitive()
+	{
+		final String upperFox = FOX_PHRASE.toUpperCase();
+		PhraseIndex<String> index = new PhraseIndex<>(true);
+		index.insert(FOX_PHRASE, FOX_PHRASE)
+			.insert(DOG_PHRASE, DOG_PHRASE)
+			.insert(MOOSE_PHRASE, MOOSE_PHRASE)
+			.insert(MOUSE_PHRASE, MOUSE_PHRASE)
+			.insert(upperFox, upperFox);
+
+		assertTrue(index.search("do").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
+		assertTrue(index.search("og").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
+		assertFalse(index.search("og").containsAll(List.of(upperFox)));
+		assertTrue(index.search("DO").containsAll(List.of(upperFox)));
+		assertTrue(index.search("OG").containsAll(List.of(upperFox)));
+		assertFalse(index.search("OG").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
 	}
 
 }

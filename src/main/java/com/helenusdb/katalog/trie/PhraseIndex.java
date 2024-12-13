@@ -18,6 +18,7 @@ public class PhraseIndex<T>
 {
 	private PhraseNode root;
 	private List<T> values;
+	private boolean isCaseSensitive = false;
 
 	public PhraseIndex()
 	{
@@ -25,11 +26,40 @@ public class PhraseIndex<T>
 		this.values = new ArrayList<>();
 	}
 
+	public PhraseIndex(boolean isCaseSensitive)
+	{
+		this();
+		setCaseSensitive(isCaseSensitive);
+	}
+
+	/**
+	 * Sets whether the index is case sensitive or not. MUST be called
+	 * before inserting any values.
+	 *
+	 * @param value True if the index is case sensitive, false otherwise.
+	 * @return The PhraseIndex instance for chaining.
+	 */
+	public PhraseIndex<T> setCaseSensitive(boolean value)
+	{
+		this.isCaseSensitive = value;
+		return this;
+	}
+
+	/**
+	 * Returns whether the index is case sensitive or not.
+	 * 
+	 * @return True if the index is case sensitive, false otherwise.
+	 */
+	public boolean isCaseSensitive()
+    {
+        return isCaseSensitive;
+    }
+
 	/**
 	 * Inserts a phrase and its associated value into the index.
 	 *
 	 * @param phrase The phrase to associate with the value.
-	 * @param value The value to associate with the phrase.
+	 * @param value  The value to associate with the phrase.
 	 * @return The PhraseIndex instance for chaining.
 	 */
 	public PhraseIndex<T> insert(String phrase, T value)
@@ -38,10 +68,11 @@ public class PhraseIndex<T>
 
 		int index = values.size();
 		values.add(value);
+		String normalizedPhrase = normalizeCase(phrase);
 
 		for (int i = 0; i < phrase.length(); i++)
 		{
-			insertSuffix(phrase.substring(i), index);
+			insertSuffix(normalizedPhrase.substring(i), index);
 		}
 
 		return this;
@@ -57,12 +88,13 @@ public class PhraseIndex<T>
 	{
 		if (query == null || query.isEmpty()) return Collections.emptyList();
 
-		return getIndicesFor(query).stream().map(values::get).toList();
+		String normalizedQuery = normalizeCase(query);
+		return getIndicesFor(normalizedQuery).stream().map(values::get).toList();
 	}
 
 	/**
-	 * Searches the index for the given query returning a list of indices for the query.
-	 * If the query is not found an empty list is returned.
+	 * Searches the index for the given query returning a list of indices for the query. If the query is not found an
+	 * empty list is returned.
 	 * 
 	 * @param query The query to search for.
 	 * @return The list of indices for the query. Never null.
@@ -85,11 +117,16 @@ public class PhraseIndex<T>
 		return current.getIndices();
 	}
 
+	private String normalizeCase(String text)
+	{
+		return isCaseSensitive ? text : text.toLowerCase();
+	}
+
 	/**
 	 * Inserts a suffix into the index with the given index.
 	 * 
 	 * @param suffix The suffix to insert.
-	 * @param index The index to associate with the suffix.
+	 * @param index  The index to associate with the suffix.
 	 */
 	private void insertSuffix(String suffix, int index)
 	{
