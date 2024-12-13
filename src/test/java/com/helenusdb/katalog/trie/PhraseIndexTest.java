@@ -1,0 +1,67 @@
+package com.helenusdb.katalog.trie;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+class PhraseIndexTest
+{
+	private static final String DOG_PHRASE = "the lazy brown dog takes a nap";
+	private static final Integer DOG_INDEX = 0;
+	private static final String FOX_PHRASE = "the quick brown fox jumps over the lazy dog";
+	private static final Integer FOX_INDEX = 1;
+	private static final String MOOSE_PHRASE = "the massive moose wants a muffin";
+	private static final Integer MOOSE_INDEX = 2;
+	private static final String MOUSE_PHRASE = "the tiny mouse wants a cookie";
+	private static final Integer MOUSE_INDEX = 3;
+
+	@Test
+	void shouldIndexStrings()
+	{
+		PhraseIndex<String> index = new PhraseIndex<>();
+		index.insert(FOX_PHRASE, FOX_PHRASE)
+			.insert(DOG_PHRASE, DOG_PHRASE)
+			.insert(MOOSE_PHRASE, MOOSE_PHRASE)
+			.insert(MOUSE_PHRASE, MOUSE_PHRASE);
+
+		assertTrue(index.search("").isEmpty());
+		assertTrue(index.search(null).isEmpty());
+		assertTrue(index.search("notfound").isEmpty());
+
+		assertTrue(index.search("do").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
+		assertTrue(index.search("og").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
+		assertEquals(List.of(FOX_PHRASE), index.search("fox"));
+		assertEquals(List.of(MOOSE_PHRASE), index.search("moose"));
+		assertEquals(List.of(MOUSE_PHRASE), index.search("mouse"));
+		assertEquals(List.of(FOX_PHRASE), index.search("quick brown"));
+		assertTrue(index.search("want").containsAll(List.of(MOOSE_PHRASE, MOUSE_PHRASE)));
+		assertTrue(index.search("the").containsAll(List.of(FOX_PHRASE, DOG_PHRASE, MOOSE_PHRASE, MOUSE_PHRASE)));
+	}
+
+	@Test
+	void shouldIndexNull()
+	{
+		PhraseIndex<Object> index = new PhraseIndex<>();
+		index.insert(DOG_PHRASE, null)
+			.insert(FOX_PHRASE, null)
+			.insert(MOOSE_PHRASE, null)
+			.insert(MOUSE_PHRASE, null);
+
+		assertTrue(index.getIndicesFor("").isEmpty());
+		assertTrue(index.getIndicesFor(null).isEmpty());
+		assertTrue(index.getIndicesFor("notfound").isEmpty());
+
+		assertTrue(index.getIndicesFor("do").containsAll(List.of(DOG_INDEX, FOX_INDEX)));
+		assertTrue(index.getIndicesFor("og").containsAll(List.of(FOX_INDEX, DOG_INDEX)));
+		assertEquals(List.of(FOX_INDEX), index.getIndicesFor("fox"));
+		assertEquals(List.of(MOOSE_INDEX), index.getIndicesFor("moose"));
+		assertEquals(List.of(MOUSE_INDEX), index.getIndicesFor("mouse"));
+		assertEquals(List.of(FOX_INDEX), index.getIndicesFor("quick brown"));
+		assertTrue(index.getIndicesFor("want").containsAll(List.of(MOOSE_INDEX, MOUSE_INDEX)));
+		assertTrue(index.getIndicesFor("the").containsAll(List.of(FOX_INDEX, DOG_INDEX, MOOSE_INDEX, MOUSE_INDEX)));
+	}
+
+}
