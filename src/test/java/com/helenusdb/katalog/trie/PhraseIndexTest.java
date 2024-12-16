@@ -21,6 +21,14 @@ class PhraseIndexTest
 	private static final Integer MOUSE_INDEX = 3;
 
 	@Test
+	void shouldConstructTrie()
+	{
+		PhraseIndex<String> index = new PhraseIndex<>();
+		index.insert("banana", null);
+		assertTrue(index.getIndicesFor("banana").contains(0));
+	}
+
+	@Test
 	void shouldIndexStrings()
 	{
 		PhraseIndex<String> index = new PhraseIndex<>();

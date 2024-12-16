@@ -1,10 +1,10 @@
 package com.helenusdb.katalog.trie;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * This PhraseIndex stores values and associated phrases (like DB records associated with a string column), allowing
@@ -17,16 +17,35 @@ import java.util.Set;
  */
 public class PhraseIndex<T>
 {
+	// The wildcard character for matching any single character in a query.
+	private static final char SINGLE_CHARACTER_WILDCARD = '?';
+
+	// The wildcard character for matching zero or more characters in a query.
+	private static final char ZERO_OR_MORE_WILDCARD = '*';
+
+	// The root node of the phrase index.
 	private PhraseNode root;
+
+	// The list of values associated with the phrases in the index.
 	private List<T> values;
+
+	// Whether the index is case sensitive or not. Can only be set at construction time.
 	private boolean isCaseSensitive = false;
 
+	/**
+	 * Constructs a new PhraseIndex without case sensitivity.
+     */
 	public PhraseIndex()
 	{
 		this.root = new PhraseNode();
-		this.values = new ArrayList<>();
+		this.values = new CopyOnWriteArrayList<>();
 	}
 
+	/**
+	 * Constructs a new PhraseIndex with the given case sensitivity.
+	 *
+	 * @param isCaseSensitive True if the index is case sensitive, false otherwise.
+	 */
 	public PhraseIndex(boolean isCaseSensitive)
 	{
 		this();
@@ -120,7 +139,7 @@ public class PhraseIndex<T>
 		char c = query[index];
 		Set<Integer> indices = new HashSet<>();
 
-		if (c == '*') // Match zero or more characters.
+		if (c == ZERO_OR_MORE_WILDCARD) // Match zero or more characters.
 		{
 			for (PhraseNode child : current.getChildren())
 			{
@@ -128,7 +147,7 @@ public class PhraseIndex<T>
 				indices.addAll(getIndicesFor(query, index + 1, child));
 			}
 		}
-		else if (c == '?') // Match any single character.
+		else if (c == SINGLE_CHARACTER_WILDCARD) // Match any single character.
 		{
 			for (PhraseNode child : current.getChildren())
 			{
@@ -162,8 +181,7 @@ public class PhraseIndex<T>
 
 		for (char c : suffix.toCharArray())
 		{
-			current.addChildIfAbsent(c);
-			current = current.getChild(c);
+			current = current.addChildIfAbsent(c);
 			current.addIndex(index);
 		}
 	}
