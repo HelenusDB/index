@@ -63,6 +63,7 @@ extends AbstractNode<K, V>
 
 		InternalNode<K, V> sibling = new InternalNode<>(getRightKeys(mid), children.subList(mid, children.size()));
 		children = children.subList(0, mid);
+		truncateKeys(mid);
 		return sibling;
 	}
 

@@ -149,4 +149,9 @@ implements Node<K, V>
 	{
 		return (order + 1) / 2;
 	}
+
+	@Override
+	public String toString() {
+		return keys.toString();
+	}
 }
