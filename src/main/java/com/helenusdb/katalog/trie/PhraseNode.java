@@ -1,5 +1,6 @@
 package com.helenusdb.katalog.trie;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,6 +53,15 @@ class PhraseNode
 	public boolean containsChild(char c)
 	{
 		return children.containsKey(c);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Collection<PhraseNode> getChildren()
+	{
+		return Collections.unmodifiableCollection(children.values());
 	}
 
 	/**

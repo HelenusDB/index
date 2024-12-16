@@ -85,4 +85,22 @@ class PhraseIndexTest
 		assertFalse(index.search("OG").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
 	}
 
+	@Test
+	void shouldSupportWildcards()
+	{
+		PhraseIndex<String> index = new PhraseIndex<>();
+		index.insert(FOX_PHRASE, FOX_PHRASE)
+			.insert(DOG_PHRASE, DOG_PHRASE)
+			.insert(MOOSE_PHRASE, MOOSE_PHRASE)
+			.insert(MOUSE_PHRASE, MOUSE_PHRASE);
+
+		assertTrue(index.search("d?g").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
+		assertEquals(2, index.search("d?g").size());
+		assertTrue(index.search("m*se").containsAll(List.of(MOUSE_PHRASE, MOOSE_PHRASE)));
+		assertEquals(2, index.search("m*se").size());
+		assertTrue(index.search("m*").containsAll(List.of(MOUSE_PHRASE, MOOSE_PHRASE, FOX_PHRASE)));
+		assertEquals(3, index.search("m*").size());
+		assertTrue(index.search("lazy*dog").containsAll(List.of(DOG_PHRASE, FOX_PHRASE)));
+		assertEquals(2, index.search("lazy*dog").size());
+	}
 }

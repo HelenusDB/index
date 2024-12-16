@@ -2,6 +2,7 @@ package com.helenusdb.katalog.trie;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -86,10 +87,7 @@ public class PhraseIndex<T>
 	 */
 	public List<T> search(String query)
 	{
-		if (query == null || query.isEmpty()) return Collections.emptyList();
-
-		String normalizedQuery = normalizeCase(query);
-		return getIndicesFor(normalizedQuery).stream().map(values::get).toList();
+		return getIndicesFor(query).stream().map(values::get).toList();
 	}
 
 	/**
@@ -102,24 +100,54 @@ public class PhraseIndex<T>
 	public Set<Integer> getIndicesFor(String query)
 	{
 		if (query == null || query.isEmpty()) return Collections.emptySet();
-		PhraseNode current = root;
-
-		for (char c : query.toCharArray())
-		{
-			if (!current.containsChild(c))
-			{
-				return Collections.emptySet();
-			}
-
-			current = current.getChild(c);
-		}
-
-		return current.getIndices();
+		String normalizedQuery = normalizeCase(query);
+		return getIndicesFor(normalizedQuery.toCharArray(), 0, root);
 	}
 
-	private String normalizeCase(String text)
+	/**
+	 * A recursive helper method to search the index for the given query returning a list of indices for the query. If
+	 * the query is not found an empty list is returned. It supports the wildcard characters '*' and '?'.
+	 * 
+	 * @param query  The query being processed.
+	 * @param index  The index into the current query character being processed.
+	 * @param current The current node in the phrase index.
+	 */
+	private Set<Integer> getIndicesFor(char[] query, int index, PhraseNode current)
 	{
-		return isCaseSensitive ? text : text.toLowerCase();
+		if (query == null || query.length == 0) return Collections.emptySet();
+		if (index == query.length) return current.getIndices();
+
+		char c = query[index];
+		Set<Integer> indices = new HashSet<>();
+
+		if (c == '*') // Match zero or more characters.
+		{
+			for (PhraseNode child : current.getChildren())
+			{
+				indices.addAll(getIndicesFor(query, index, child));
+				indices.addAll(getIndicesFor(query, index + 1, child));
+			}
+		}
+		else if (c == '?') // Match any single character.
+		{
+			for (PhraseNode child : current.getChildren())
+			{
+				indices.addAll(getIndicesFor(query, index + 1, child));
+			}
+
+			indices.addAll(getIndicesFor(query, index + 1, current));
+		}
+		else // Exact match.
+		{
+			PhraseNode child = current.getChild(c);
+
+			if (child != null)
+			{
+				indices.addAll(getIndicesFor(query, index + 1, child));
+			}
+		}
+	
+		return indices;
 	}
 
 	/**
@@ -138,5 +166,16 @@ public class PhraseIndex<T>
 			current = current.getChild(c);
 			current.addIndex(index);
 		}
+	}
+
+	/**
+	 * Normalizes the case of the given text based on the case sensitivity of the index.
+	 * 
+	 * @param text The text to normalize.
+	 * @return The normalized text.
+	 */
+	private String normalizeCase(String text)
+	{
+		return isCaseSensitive ? text : text.toLowerCase();
 	}
 }
