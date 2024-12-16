@@ -1,2 +1,3 @@
-# diago
-# katalog
+# HelenusDB Katalog
+
+**Indexing Magic for Cassandra**
