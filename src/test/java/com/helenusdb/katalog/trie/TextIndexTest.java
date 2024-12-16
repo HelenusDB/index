@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-class PhraseIndexTest {
+class TextIndexTest {
 	private static final String DOG_PHRASE = "the lazy brown dog takes a nap";
 	private static final Integer DOG_INDEX = 0;
 	private static final String FOX_PHRASE = "the quick brown fox jumps over the lazy dog";
@@ -21,7 +21,7 @@ class PhraseIndexTest {
 
 	@Test
 	void shouldConstructTrie() {
-		PhraseIndex<String> index = new PhraseIndex<>();
+		TextIndex<String> index = new TextIndex<>();
 		index.insert("banana", null);
 		assertTrue(index.getIndicesFor("banana").contains(0));
 	}
@@ -34,7 +34,7 @@ class PhraseIndexTest {
             new User("Charlie", "Lane", 35, "Bigtown, USA"),
             new User("David", "Smith", 40, "Hometown, USA")
         );
-		PhraseIndex<User> index = new PhraseIndex<>();
+		TextIndex<User> index = new TextIndex<>();
 		index.insert("Alice Brown", users.get(0));
 		index.insert("Bob Barker", users.get(1));
 		index.insert("Charlie Lane", users.get(2));
@@ -53,7 +53,7 @@ class PhraseIndexTest {
 
 	@Test
 	void shouldIndexStrings() {
-		PhraseIndex<String> index = new PhraseIndex<>();
+		TextIndex<String> index = new TextIndex<>();
 		index.insert(FOX_PHRASE, FOX_PHRASE).insert(DOG_PHRASE, DOG_PHRASE).insert(MOOSE_PHRASE, MOOSE_PHRASE)
 				.insert(MOUSE_PHRASE, MOUSE_PHRASE);
 
@@ -73,7 +73,7 @@ class PhraseIndexTest {
 
 	@Test
 	void shouldIndexNull() {
-		PhraseIndex<Object> index = new PhraseIndex<>();
+		TextIndex<Object> index = new TextIndex<>();
 		index.insert(DOG_PHRASE, null).insert(FOX_PHRASE, null).insert(MOOSE_PHRASE, null).insert(MOUSE_PHRASE, null);
 
 		assertTrue(index.getIndicesFor("").isEmpty());
@@ -93,7 +93,7 @@ class PhraseIndexTest {
 	@Test
 	void shouldBeCaseSensitive() {
 		final String upperFox = FOX_PHRASE.toUpperCase();
-		PhraseIndex<String> index = new PhraseIndex<>(true);
+		TextIndex<String> index = new TextIndex<>(true);
 		index.insert(FOX_PHRASE, FOX_PHRASE).insert(DOG_PHRASE, DOG_PHRASE).insert(MOOSE_PHRASE, MOOSE_PHRASE)
 				.insert(MOUSE_PHRASE, MOUSE_PHRASE).insert(upperFox, upperFox);
 
@@ -107,7 +107,7 @@ class PhraseIndexTest {
 
 	@Test
 	void shouldSupportWildcards() {
-		PhraseIndex<String> index = new PhraseIndex<>();
+		TextIndex<String> index = new TextIndex<>();
 		index.insert(FOX_PHRASE, FOX_PHRASE).insert(DOG_PHRASE, DOG_PHRASE).insert(MOOSE_PHRASE, MOOSE_PHRASE)
 				.insert(MOUSE_PHRASE, MOUSE_PHRASE);
 

@@ -2,7 +2,7 @@ package com.helenusdb.katalog.trie;
 
 import org.junit.jupiter.api.Test;
 
-class PhraseIndexBenchmarkTest
+class TextIndexBenchmarkTest
 {
 	private static final int SEARCHES = 10000;
 	private static final String[] DESCRIPTIONS = { "Wireless Bluetooth earbuds with noise cancellation",
@@ -117,13 +117,13 @@ class PhraseIndexBenchmarkTest
 	@Test
 	void test()
 	{
-		PhraseIndex<String> index = timeIndexing();
+		TextIndex<String> index = timeIndexing();
 		timeSearch(index);
 	}
 
-	private PhraseIndex<String> timeIndexing()
+	private TextIndex<String> timeIndexing()
 	{
-		PhraseIndex<String> index = new PhraseIndex<>();
+		TextIndex<String> index = new TextIndex<>();
 		long start = System.currentTimeMillis();
 
 		for (String description : DESCRIPTIONS)
@@ -137,7 +137,7 @@ class PhraseIndexBenchmarkTest
 		return index;
 	}
 
-	private void timeSearch(PhraseIndex<String> index)
+	private void timeSearch(TextIndex<String> index)
 	{
 		String[] phrases = { "waxing kit", "eco-friendly", "gaming keyboard", "water bottle", "wireless charging pad",
 			"usb-c", "anti-bacterial" };

@@ -8,14 +8,14 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * PhraseNode is a node in PhraseIndex to store phrases and indices into their associated values.
+ * TextNode is a node in TextIndex to store phrases and indices into their associated values.
  */
-class PhraseNode
+class TextNode
 {
 	/**
 	 * The children of this node, indexed by the first character of the phrase.
 	 */
-	private Map<Character, PhraseNode> children;
+	private Map<Character, TextNode> children;
 
 	/**
 	 * The indices of the values associated with the phrase ending. Only populated if this node is the end of a phrase
@@ -28,14 +28,14 @@ class PhraseNode
 	 *
 	 * @param c The character to index the child node by.
 	 */
-	public PhraseNode addChildIfAbsent(char c)
+	public TextNode addChildIfAbsent(char c)
 	{
 		if (children == null)
 		{
 			children = new ConcurrentHashMap<>();
 		}
 
-		return children.computeIfAbsent(c, k -> new PhraseNode());
+		return children.computeIfAbsent(c, k -> new TextNode());
 	}
 
 	/**
@@ -44,7 +44,7 @@ class PhraseNode
 	 * @param c The character to get the child node for.
 	 * @return The child node indexed by the given character, or null if no such child exists.
 	 */
-	public PhraseNode getChild(char c)
+	public TextNode getChild(char c)
 	{
 		return children == null ? null : children.get(c);
 	}
@@ -65,7 +65,7 @@ class PhraseNode
 	 * 
 	 * @return
 	 */
-	public Collection<PhraseNode> getChildren()
+	public Collection<TextNode> getChildren()
 	{
 		return children == null ? Collections.emptyList() : Collections.unmodifiableCollection(children.values());
 	}
@@ -110,7 +110,7 @@ class PhraseNode
 	@Override
 	public String toString()
 	{
-		return "PhraseNode{" + "children=" + (children == null ? "[]" : children.keySet()) + ", indices="
+		return "TextNode{" + "children=" + (children == null ? "[]" : children.keySet()) + ", indices="
 			+ (indices == null ? "[]" : indices) + '}';
 	}
 }

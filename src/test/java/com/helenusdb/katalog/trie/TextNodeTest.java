@@ -12,16 +12,16 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-class PhraseNodeTest
+class TextNodeTest
 {
 	@Test
 	void testAddAndGetChild()
 	{
-		PhraseNode node = new PhraseNode();
+		TextNode node = new TextNode();
 
 		// Add a child and retrieve it
 		node.addChildIfAbsent('a');
-		PhraseNode childNode = node.getChild('a');
+		TextNode childNode = node.getChild('a');
 
 		assertNotNull(childNode, "Child node for 'a' should exist.");
 		assertTrue(node.containsChild('a'), "Node should contain child for 'a'.");
@@ -34,15 +34,15 @@ class PhraseNodeTest
 	@Test
 	void testAddDuplicateChild()
 	{
-		PhraseNode node = new PhraseNode();
+		TextNode node = new TextNode();
 
 		// Add a child and retrieve it
 		node.addChildIfAbsent('a');
-		PhraseNode firstChild = node.getChild('a');
+		TextNode firstChild = node.getChild('a');
 
 		// Add the same child character again
 		node.addChildIfAbsent('a');
-		PhraseNode secondChild = node.getChild('a');
+		TextNode secondChild = node.getChild('a');
 
 		assertSame(firstChild, secondChild, "Child nodes for duplicate additions should be the same instance.");
 	}
@@ -50,7 +50,7 @@ class PhraseNodeTest
 	@Test
 	void testAddAndGetIndices()
 	{
-		PhraseNode node = new PhraseNode();
+		TextNode node = new TextNode();
 
 		// Add indices
 		node.addIndex(1);
@@ -69,7 +69,7 @@ class PhraseNodeTest
 	@Test
 	void testIndicesAreUnmodifiable()
 	{
-		PhraseNode node = new PhraseNode();
+		TextNode node = new TextNode();
 
 		// Add an index
 		node.addIndex(1);
@@ -83,14 +83,14 @@ class PhraseNodeTest
 	@Test
 	void testToString()
 	{
-		PhraseNode node = new PhraseNode();
+		TextNode node = new TextNode();
 
 		// Add children and indices
 		node.addChildIfAbsent('a');
 		node.addChildIfAbsent('b');
 		node.addIndex(1);
 
-		String expected = "PhraseNode{children=[a, b], indices=[1]}";
+		String expected = "TextNode{children=[a, b], indices=[1]}";
 		assertEquals(expected, node.toString(), "toString() output should match expected format.");
 	}
 }
