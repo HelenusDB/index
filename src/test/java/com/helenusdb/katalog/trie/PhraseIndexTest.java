@@ -9,8 +9,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-class PhraseIndexTest
-{
+class PhraseIndexTest {
 	private static final String DOG_PHRASE = "the lazy brown dog takes a nap";
 	private static final Integer DOG_INDEX = 0;
 	private static final String FOX_PHRASE = "the quick brown fox jumps over the lazy dog";
@@ -21,21 +20,42 @@ class PhraseIndexTest
 	private static final Integer MOUSE_INDEX = 3;
 
 	@Test
-	void shouldConstructTrie()
-	{
+	void shouldConstructTrie() {
 		PhraseIndex<String> index = new PhraseIndex<>();
 		index.insert("banana", null);
 		assertTrue(index.getIndicesFor("banana").contains(0));
 	}
 
 	@Test
-	void shouldIndexStrings()
-	{
+	void shouldPerformAdmirably() {
+		List<User> users = List.of(
+			new User("Alice", "Brown", 25, "Anytown, USA"),
+            new User("Bob", "Barker", 30, "Littletown, USA"),
+            new User("Charlie", "Lane", 35, "Bigtown, USA"),
+            new User("David", "Smith", 40, "Hometown, USA")
+        );
+		PhraseIndex<User> index = new PhraseIndex<>();
+		index.insert("Alice Brown", users.get(0));
+		index.insert("Bob Barker", users.get(1));
+		index.insert("Charlie Lane", users.get(2));
+		index.insert("David Smith", users.get(3));
+
+		List<User> results = index.search("b*"); // Returns Alice and Bob.
+		assertEquals(2, results.size());
+		assertTrue(results.containsAll(List.of(users.get(0), users.get(1))));
+		results = index.search("lane"); // Returns Carlie.
+		assertEquals(1, results.size());
+		assertEquals(users.get(2), results.get(0));
+		results = index.search("i?"); // Returns Alice, Charlie, and David.
+		assertEquals(3, results.size());
+		assertTrue(results.containsAll(List.of(users.get(0), users.get(2), users.get(3))));
+	}
+
+	@Test
+	void shouldIndexStrings() {
 		PhraseIndex<String> index = new PhraseIndex<>();
-		index.insert(FOX_PHRASE, FOX_PHRASE)
-			.insert(DOG_PHRASE, DOG_PHRASE)
-			.insert(MOOSE_PHRASE, MOOSE_PHRASE)
-			.insert(MOUSE_PHRASE, MOUSE_PHRASE);
+		index.insert(FOX_PHRASE, FOX_PHRASE).insert(DOG_PHRASE, DOG_PHRASE).insert(MOOSE_PHRASE, MOOSE_PHRASE)
+				.insert(MOUSE_PHRASE, MOUSE_PHRASE);
 
 		assertTrue(index.search("").isEmpty());
 		assertTrue(index.search(null).isEmpty());
@@ -52,13 +72,9 @@ class PhraseIndexTest
 	}
 
 	@Test
-	void shouldIndexNull()
-	{
+	void shouldIndexNull() {
 		PhraseIndex<Object> index = new PhraseIndex<>();
-		index.insert(DOG_PHRASE, null)
-			.insert(FOX_PHRASE, null)
-			.insert(MOOSE_PHRASE, null)
-			.insert(MOUSE_PHRASE, null);
+		index.insert(DOG_PHRASE, null).insert(FOX_PHRASE, null).insert(MOOSE_PHRASE, null).insert(MOUSE_PHRASE, null);
 
 		assertTrue(index.getIndicesFor("").isEmpty());
 		assertTrue(index.getIndicesFor(null).isEmpty());
@@ -75,15 +91,11 @@ class PhraseIndexTest
 	}
 
 	@Test
-	void shouldBeCaseSensitive()
-	{
+	void shouldBeCaseSensitive() {
 		final String upperFox = FOX_PHRASE.toUpperCase();
 		PhraseIndex<String> index = new PhraseIndex<>(true);
-		index.insert(FOX_PHRASE, FOX_PHRASE)
-			.insert(DOG_PHRASE, DOG_PHRASE)
-			.insert(MOOSE_PHRASE, MOOSE_PHRASE)
-			.insert(MOUSE_PHRASE, MOUSE_PHRASE)
-			.insert(upperFox, upperFox);
+		index.insert(FOX_PHRASE, FOX_PHRASE).insert(DOG_PHRASE, DOG_PHRASE).insert(MOOSE_PHRASE, MOOSE_PHRASE)
+				.insert(MOUSE_PHRASE, MOUSE_PHRASE).insert(upperFox, upperFox);
 
 		assertTrue(index.search("do").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
 		assertTrue(index.search("og").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
@@ -94,13 +106,10 @@ class PhraseIndexTest
 	}
 
 	@Test
-	void shouldSupportWildcards()
-	{
+	void shouldSupportWildcards() {
 		PhraseIndex<String> index = new PhraseIndex<>();
-		index.insert(FOX_PHRASE, FOX_PHRASE)
-			.insert(DOG_PHRASE, DOG_PHRASE)
-			.insert(MOOSE_PHRASE, MOOSE_PHRASE)
-			.insert(MOUSE_PHRASE, MOUSE_PHRASE);
+		index.insert(FOX_PHRASE, FOX_PHRASE).insert(DOG_PHRASE, DOG_PHRASE).insert(MOOSE_PHRASE, MOOSE_PHRASE)
+				.insert(MOUSE_PHRASE, MOUSE_PHRASE);
 
 		assertTrue(index.search("d?g").containsAll(List.of(FOX_PHRASE, DOG_PHRASE)));
 		assertEquals(2, index.search("d?g").size());

@@ -11,6 +11,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * searching those values for those that contain a given substring. The index is built by adding strings and values then
  * the search method can be used to find all values that contain a given query substring.
  * 
+ * The index supports the wildcard characters '*' and '?'. The '*' character matches zero or more characters and the '?'
+ * character matches any single character.
+ * 
+ * The index is case sensitive by default but can be set to case insensitive at construction time.
+ * However, note that case insensitivity essentially causes a doubling in the memory size of the index.
+ * 
+ * Usage:
+ *		 PhraseIndex<User> index = new PhraseIndex<>(); // Case insensitive by default.
+ *		 index.insert("Alice Brown", new User("Alice", "Brown", 25, "Anytown, USA"));
+ *		 index.insert("Bob Barker", new User("Bob", "Barker", 30, "Littletown, USA"));
+ *		 index.insert("Charlie Lane", new User("Charlie", "Lane", 35, "Bigtown, USA"));
+ *		 index.insert("David Smith", new User("David", "Smith", 40, "Hometown, USA"));
+ *
+ *		 List<User> results = index.search("b*"); // Returns Bob and Alice.
+ *		 results = index.search("lane"); // Returns Carlie.
+ *		 results = index.search("i?"); // Returns Alice, Charlie, and David.
+ * 
  * @author Todd Fredrich
  * @since 13 Dec 2024
  * @see PhraseNode
