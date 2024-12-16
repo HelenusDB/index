@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class LeafNodeTest
+class LeafNodeTest
 {
 	@Test
-	public void shouldCreateEmpty()
+	void shouldCreateEmpty()
 	{
 		LeafNode<Integer, String> node = new LeafNode<>();
 		assertNotNull(node);
@@ -22,7 +22,7 @@ public class LeafNodeTest
 	}
 
 	@Test
-	public void shouldInsert()
+	void shouldInsert()
 	{
 		LeafNode<Integer, String> node = new LeafNode<>();
 		node.insert(2, "two");
@@ -36,7 +36,7 @@ public class LeafNodeTest
 	}
 
 	@Test
-	public void shouldSplitOrderThree()
+	void shouldSplitOrderThree()
 	{
 		LeafNode<Integer, String> node = new LeafNode<>();
 		node.insert(1, "one");
@@ -57,7 +57,7 @@ public class LeafNodeTest
 	}
 
 	@Test
-	public void shouldSplitOrderFour()
+	void shouldSplitOrderFour()
 	{
 		LeafNode<Integer, String> node = new LeafNode<>();
 		node.insert(1, "one");
@@ -80,7 +80,7 @@ public class LeafNodeTest
 	}
 
 	@Test
-	public void shouldMerge()
+	void shouldMerge()
 	{
 		LeafNode<Integer, String> node = new LeafNode<>();
 		node.insert(1, "one");
@@ -99,7 +99,7 @@ public class LeafNodeTest
 	}
 
 	@Test
-	public void shouldNotSplit()
+	void shouldNotSplit()
 	{
 		LeafNode<Integer, String> node = new LeafNode<>();
 		node.insert(1, "one");
@@ -109,7 +109,7 @@ public class LeafNodeTest
 	}
 
 	@Test
-	public void shouldGetMiddleKeyOrderThree()
+	void shouldGetMiddleKeyOrderThree()
 	{
 		LeafNode<Integer, String> node = new LeafNode<>();
 		node.insert(1, "one");
@@ -119,7 +119,7 @@ public class LeafNodeTest
 	}
 
 	@Test
-	public void shouldGetMiddleKeyOrderFour()
+	void shouldGetMiddleKeyOrderFour()
 	{
 		LeafNode<Integer, String> node = new LeafNode<>();
 		node.insert(1, "one");

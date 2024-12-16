@@ -35,6 +35,17 @@ extends AbstractNode<K, V>
 		return children.get(getKeyIndex(key));
 	}
 
+	public V traverse(K key) {
+		Node<K, V> current = this;
+
+		while (!current.isLeaf()) {
+			InternalNode<K, V> node = (InternalNode<K, V>) current;
+			current = node.search(key);
+		}
+
+		return ((LeafNode<K, V>) current).search(key);
+	}
+
 	void insert(K key, Node<K, V> left, Node<K, V> right)
 	{
 		int index = insertKey(key);

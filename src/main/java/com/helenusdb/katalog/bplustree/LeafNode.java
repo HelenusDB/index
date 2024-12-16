@@ -32,6 +32,11 @@ extends AbstractNode<K, V>
 		this.values = new ArrayList<>(values);
 	}
 
+	public LeafNode(K key, V value) {
+		this();
+		insert(key, value);
+	}
+
 	public V search(K key)
 	{
 		int index = getKeyIndex(key);

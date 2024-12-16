@@ -4,11 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class InternalNodeTest
+class InternalNodeTest
 {
 	@Test
 	void shouldCreateEmpty()
@@ -21,35 +20,58 @@ public class InternalNodeTest
 	}
 
 	@Test
-	void shouldInsert()
+	void shouldInsertOutOfOrder()
 	{
-		LeafNode<Integer, String> node = new LeafNode<>();
-		node.insert(2, "two");
-		node.insert(2, "two-also");
-		node.insert(3, "three");
-		node.insert(1, "one");
+		InternalNode<Integer, String> node = new InternalNode<>();
+		InternalNode<Integer, String> one = new InternalNode<>();
+		one.insert(1, new LeafNode<>(1, "one"), null);
+		InternalNode<Integer, String> two = new InternalNode<>();
+		two.insert(2, new LeafNode<>(2, "two"), null);
+		InternalNode<Integer, String> three = new InternalNode<>();
+		three.insert(3, new LeafNode<>(3, "three"), null);
+		node.insert(3, three, null);
+		node.insert(1, one, three);
+		node.insert(2, two, null);
 		assertEquals(3, node.size());
-		assertEquals("one", node.search(1));
-		assertEquals("two-also", node.search(2));
-		assertEquals("three", node.search(3));
+		assertEquals("one", node.traverse(1));
+		assertEquals("two", node.traverse(2));
+		assertEquals("three", node.traverse(3));
 	}
 
 	@Test
-	void shouldSplitLeafOrderThree()
+	void shouldInsertInOrder()
 	{
-		LeafNode<Integer, String> leaf = new LeafNode<>();
-		leaf.insert(1, "one");
-		leaf.insert(3, "three");
-		leaf.insert(2, "two");
-		assertEquals(3, leaf.getMiddleKey(3).intValue());
-		LeafNode<Integer, String> sibling = leaf.split(3);
+		InternalNode<Integer, String> node = new InternalNode<>();
+		InternalNode<Integer, String> one = new InternalNode<>();
+		one.insert(1, new LeafNode<>(1, "one"), null);
+		InternalNode<Integer, String> two = new InternalNode<>();
+		two.insert(2, new LeafNode<>(2, "two"), null);
+		InternalNode<Integer, String> three = new InternalNode<>();
+		three.insert(3, new LeafNode<>(3, "three"), null);
+		node.insert(1, one, null);
+		node.insert(2, two, null);
+		node.insert(3, three, null);
+		assertEquals(3, node.size());
+		assertEquals("one", node.traverse(1));
+		assertEquals("two", node.traverse(2));
+		assertEquals("three", node.traverse(3));
+	}
+
+	@Test
+	void shouldSplitOrderThree()
+	{
+		InternalNode<Integer, String> node = new InternalNode<>();
+		node.insert(1, new LeafNode<>(1, "one"), null);
+		node.insert(3, new LeafNode<>(3, "three"), null);
+		node.insert(2, new LeafNode<>(2, "two"), null);
+		assertEquals(3, node.getMiddleKey(3).intValue());
+		InternalNode<Integer, String> sibling = node.split(3);
 		assertNotNull(sibling);
 		assertEquals(1, sibling.size());
-		assertEquals(2, leaf.size());
-		assertTrue(leaf.isLeaf());
-		assertEquals("one", leaf.search(1));
-		assertEquals("two", leaf.search(2));
-		assertEquals("three", sibling.search(3));
+		assertEquals(2, node.size());
+		assertEquals("one", node.traverse(1));
+		assertEquals("two", node.traverse(2));
+		assertEquals("three", sibling.traverse(3));
 	}
 
 	@Test
