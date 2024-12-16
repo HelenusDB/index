@@ -2,9 +2,10 @@ package com.helenusdb.katalog.trie;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * PhraseNode is a node in PhraseIndex to store phrases and indices into their associated values.
@@ -13,23 +14,28 @@ class PhraseNode
 {
 	/**
 	 * The children of this node, indexed by the first character of the phrase.
-     */
-	private HashMap<Character, PhraseNode> children = new HashMap<>();
+	 */
+	private Map<Character, PhraseNode> children;
 
 	/**
-	 * The indices of the values associated with the phrase ending. Only populated
-	 * if this node is the end of a phrase (a leaf node).
+	 * The indices of the values associated with the phrase ending. Only populated if this node is the end of a phrase
+	 * (a leaf node).
 	 */
-	private Set<Integer> indices = new HashSet<>();
+	private Set<Integer> indices;
 
 	/**
 	 * Adds a child node to this node. If the child already exists, it is not replaced.
 	 *
 	 * @param c The character to index the child node by.
 	 */
-	public void addChildIfAbsent(char c)
+	public PhraseNode addChildIfAbsent(char c)
 	{
-		children.putIfAbsent(c, new PhraseNode());
+		if (children == null)
+		{
+			children = new ConcurrentHashMap<>();
+		}
+
+		return children.computeIfAbsent(c, k -> new PhraseNode());
 	}
 
 	/**
@@ -40,7 +46,7 @@ class PhraseNode
 	 */
 	public PhraseNode getChild(char c)
 	{
-		return children.get(c);
+		return children == null ? null : children.get(c);
 	}
 
 	/**
@@ -52,7 +58,7 @@ class PhraseNode
 	 */
 	public boolean containsChild(char c)
 	{
-		return children.containsKey(c);
+		return children != null && children.containsKey(c);
 	}
 
 	/**
@@ -61,7 +67,7 @@ class PhraseNode
 	 */
 	public Collection<PhraseNode> getChildren()
 	{
-		return Collections.unmodifiableCollection(children.values());
+		return children == null ? Collections.emptyList() : Collections.unmodifiableCollection(children.values());
 	}
 
 	/**
@@ -72,18 +78,23 @@ class PhraseNode
 	 */
 	public void addIndex(int index)
 	{
+		if (indices == null)
+		{
+			indices = new HashSet<>();
+		}
+
 		indices.add(index);
 	}
 
 	/**
-	 * Gets the set of indices in this leaf node. The list is unmodifiable to prevent
-	 * modification of the internal state.
+	 * Gets the set of indices in this leaf node. The list is unmodifiable to prevent modification of the internal
+	 * state.
 	 * 
 	 * @return The set of indices (into the PhraseIndex) in this leaf node.
 	 */
 	public Set<Integer> getIndices()
 	{
-		return Collections.unmodifiableSet(indices);
+		return indices == null ? Collections.emptySet() : Collections.unmodifiableSet(indices);
 	}
 
 	/**
@@ -93,12 +104,13 @@ class PhraseNode
 	 */
 	public boolean isLeaf()
 	{
-		return children.isEmpty();
+		return children == null || children.isEmpty();
 	}
 
 	@Override
 	public String toString()
 	{
-		return "PhraseNode{" + "children=" + children.keySet() + ", indices=" + indices + '}';
+		return "PhraseNode{" + "children=" + (children == null ? "[]" : children.keySet()) + ", indices="
+			+ (indices == null ? "[]" : indices) + '}';
 	}
 }
