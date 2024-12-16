@@ -132,15 +132,17 @@ class TextIndexBenchmarkTest
 		}
 
 		long end = System.currentTimeMillis();
+		long totalTimeMillis = end - start;
+		double avgTimeMicros = (totalTimeMillis / (double) DESCRIPTIONS.length) * 1000.0;
 		System.out.println(String.format("Indexing of %d phrases took %dms (%.3f microseconds per phrase)",
-			DESCRIPTIONS.length, end - start, ((end - start) / (double) DESCRIPTIONS.length) * 1000));
+			DESCRIPTIONS.length, totalTimeMillis, avgTimeMicros));
 		return index;
 	}
 
 	private void timeSearch(TextIndex<String> index)
 	{
 		String[] phrases = { "waxing kit", "eco-friendly", "gaming keyboard", "water bottle", "wireless charging pad",
-			"usb-c", "anti-bacterial" };
+			"usb-c", "anti-bacterial", "lip balm", "earbuds" };
 
 		long start = System.nanoTime();
 
@@ -150,7 +152,9 @@ class TextIndexBenchmarkTest
 		}
 
 		long end = System.nanoTime();
-		System.out.println(String.format("%d Searches took %dms (%.3f microseconds per search)", SEARCHES,
-			(end - start) / 1000000, ((end - start) / (double) SEARCHES) / 1000));
+		long totalTimeMillis = (end - start) / 1000000;
+		double avgTimeMicros = totalTimeMillis / (double) SEARCHES * 1000.0;
+		System.out.println(String.format("%d Searches took %dms (%.3f microseconds per search)",
+			SEARCHES, totalTimeMillis, avgTimeMicros));
 	}
 }
