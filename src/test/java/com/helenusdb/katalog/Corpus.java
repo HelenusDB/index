@@ -1,11 +1,8 @@
-package com.helenusdb.katalog.trie;
+package com.helenusdb.katalog;
 
-import org.junit.jupiter.api.Test;
-
-class TextIndexBenchmarkTest
+public final class Corpus
 {
-	private static final int SEARCHES = 10000;
-	private static final String[] DESCRIPTIONS = { "Wireless Bluetooth earbuds with noise cancellation",
+	public static final String[] DESCRIPTIONS = { "Wireless Bluetooth earbuds with noise cancellation",
 		"Stainless steel water bottle with vacuum insulation", "Portable power bank with 10000mAh capacity",
 		"Adjustable laptop stand with ergonomic design", "Smart LED bulb with color-changing features",
 		"Fitness tracker with heart rate monitoring", "USB-C charging cable, durable and fast-charging",
@@ -114,47 +111,4 @@ class TextIndexBenchmarkTest
 		"Solar-powered charger in portable design", "Durable fishing rod with high-quality spool",
 		"Waterproof phone case for Samsung devices", "Solar-powered charger for iPhones" };
 
-	@Test
-	void test()
-	{
-		TextIndex<String> index = timeIndexing();
-		timeSearch(index);
-	}
-
-	private TextIndex<String> timeIndexing()
-	{
-		TextIndex<String> index = new TextIndex<>();
-		long start = System.currentTimeMillis();
-
-		for (String description : DESCRIPTIONS)
-		{
-			index.insert(description, description);
-		}
-
-		long end = System.currentTimeMillis();
-		long totalTimeMillis = end - start;
-		double avgTimeMicros = (totalTimeMillis / (double) DESCRIPTIONS.length) * 1000.0;
-		System.out.println(String.format("Indexing of %d phrases took %dms (%.3f microseconds per phrase)",
-			DESCRIPTIONS.length, totalTimeMillis, avgTimeMicros));
-		return index;
-	}
-
-	private void timeSearch(TextIndex<String> index)
-	{
-		String[] phrases = { "waxing kit", "eco-friendly", "gaming keyboard", "water bottle", "wireless charging pad",
-			"usb-c", "anti-bacterial", "lip balm", "earbuds" };
-
-		long start = System.nanoTime();
-
-		for (int i = 0; i < SEARCHES; i++)
-		{
-			index.search(phrases[i % phrases.length]);
-		}
-
-		long end = System.nanoTime();
-		long totalTimeMillis = (end - start) / 1000000;
-		double avgTimeMicros = totalTimeMillis / (double) SEARCHES * 1000.0;
-		System.out.println(String.format("%d Searches took %dms (%.3f microseconds per search)",
-			SEARCHES, totalTimeMillis, avgTimeMicros));
-	}
 }

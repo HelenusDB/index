@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.trie;
+package com.helenusdb.katalog.suffix;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -12,16 +12,18 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-class TextNodeTest
+import com.helenusdb.katalog.suffix.SuffixNode;
+
+class SuffixNodeTest
 {
 	@Test
 	void testAddAndGetChild()
 	{
-		TextNode node = new TextNode();
+		SuffixNode node = new SuffixNode();
 
 		// Add a child and retrieve it
 		node.addChildIfAbsent('a');
-		TextNode childNode = node.getChild('a');
+		SuffixNode childNode = node.getChild('a');
 
 		assertNotNull(childNode, "Child node for 'a' should exist.");
 		assertTrue(node.containsChild('a'), "Node should contain child for 'a'.");
@@ -34,15 +36,15 @@ class TextNodeTest
 	@Test
 	void testAddDuplicateChild()
 	{
-		TextNode node = new TextNode();
+		SuffixNode node = new SuffixNode();
 
 		// Add a child and retrieve it
 		node.addChildIfAbsent('a');
-		TextNode firstChild = node.getChild('a');
+		SuffixNode firstChild = node.getChild('a');
 
 		// Add the same child character again
 		node.addChildIfAbsent('a');
-		TextNode secondChild = node.getChild('a');
+		SuffixNode secondChild = node.getChild('a');
 
 		assertSame(firstChild, secondChild, "Child nodes for duplicate additions should be the same instance.");
 	}
@@ -50,7 +52,7 @@ class TextNodeTest
 	@Test
 	void testAddAndGetIndices()
 	{
-		TextNode node = new TextNode();
+		SuffixNode node = new SuffixNode();
 
 		// Add indices
 		node.addIndex(1);
@@ -69,7 +71,7 @@ class TextNodeTest
 	@Test
 	void testIndicesAreUnmodifiable()
 	{
-		TextNode node = new TextNode();
+		SuffixNode node = new SuffixNode();
 
 		// Add an index
 		node.addIndex(1);
@@ -83,14 +85,14 @@ class TextNodeTest
 	@Test
 	void testToString()
 	{
-		TextNode node = new TextNode();
+		SuffixNode node = new SuffixNode();
 
 		// Add children and indices
 		node.addChildIfAbsent('a');
 		node.addChildIfAbsent('b');
 		node.addIndex(1);
 
-		String expected = "TextNode{children=[a, b], indices=[1]}";
+		String expected = "SuffixNode{children=[a, b], indices=[1]}";
 		assertEquals(expected, node.toString(), "toString() output should match expected format.");
 	}
 }

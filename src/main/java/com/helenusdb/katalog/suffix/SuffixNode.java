@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.trie;
+package com.helenusdb.katalog.suffix;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -8,14 +8,14 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * TextNode is a node in TextIndex to store phrases and indices into their associated values.
+ * SuffixNode is a node in SuffixIndex to store phrases and indices into their associated values.
  */
-class TextNode
+class SuffixNode
 {
 	/**
 	 * The children of this node, indexed by the first character of the phrase.
 	 */
-	private Map<Character, TextNode> children;
+	private Map<Character, SuffixNode> children;
 
 	/**
 	 * The indices of the values associated with the phrase ending. Only populated if this node is the end of a phrase
@@ -28,14 +28,14 @@ class TextNode
 	 *
 	 * @param c The character to index the child node by.
 	 */
-	public TextNode addChildIfAbsent(char c)
+	public SuffixNode addChildIfAbsent(char c)
 	{
 		if (children == null)
 		{
 			children = new ConcurrentHashMap<>();
 		}
 
-		return children.computeIfAbsent(c, k -> new TextNode());
+		return children.computeIfAbsent(c, k -> new SuffixNode());
 	}
 
 	/**
@@ -44,7 +44,7 @@ class TextNode
 	 * @param c The character to get the child node for.
 	 * @return The child node indexed by the given character, or null if no such child exists.
 	 */
-	public TextNode getChild(char c)
+	public SuffixNode getChild(char c)
 	{
 		return children == null ? null : children.get(c);
 	}
@@ -65,7 +65,7 @@ class TextNode
 	 * 
 	 * @return
 	 */
-	public Collection<TextNode> getChildren()
+	public Collection<SuffixNode> getChildren()
 	{
 		return children == null ? Collections.emptyList() : Collections.unmodifiableCollection(children.values());
 	}
@@ -110,7 +110,7 @@ class TextNode
 	@Override
 	public String toString()
 	{
-		return "TextNode{" + "children=" + (children == null ? "[]" : children.keySet()) + ", indices="
+		return "SuffixNode{" + "children=" + (children == null ? "[]" : children.keySet()) + ", indices="
 			+ (indices == null ? "[]" : indices) + '}';
 	}
 }

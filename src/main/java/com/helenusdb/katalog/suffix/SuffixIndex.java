@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.trie;
+package com.helenusdb.katalog.suffix;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * This TextIndex stores values and associated phrases (like DB records associated with a string column), allowing
+ * This SuffixIndex stores values and associated phrases (like DB records associated with a string column), allowing
  * searching those values for those that contain a given substring. The index is built by adding strings and values then
  * the search method can be used to find all values that contain a given query substring.
  * 
@@ -18,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * However, note that case insensitivity essentially causes a doubling in the memory size of the index.
  * 
  * Usage:
- *		 TextIndex<User> index = new TextIndex<>(); // Case insensitive by default.
+ *		 SuffixIndex<User> index = new SuffixIndex<>(); // Case insensitive by default.
  *		 index.insert("Alice Brown", new User("Alice", "Brown", 25, "Anytown, USA"));
  *		 index.insert("Bob Barker", new User("Bob", "Barker", 30, "Littletown, USA"));
  *		 index.insert("Charlie Lane", new User("Charlie", "Lane", 35, "Bigtown, USA"));
@@ -30,9 +30,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * 
  * @author Todd Fredrich
  * @since 13 Dec 2024
- * @see TextNode
+ * @see SuffixNode
  */
-public class TextIndex<T>
+public class SuffixIndex<T>
 {
 	// The wildcard character for matching any single character in a query.
 	private static final char SINGLE_CHARACTER_WILDCARD = '?';
@@ -41,7 +41,7 @@ public class TextIndex<T>
 	private static final char ZERO_OR_MORE_WILDCARD = '*';
 
 	// The root node of the phrase index.
-	private TextNode root;
+	private SuffixNode root;
 
 	// The list of values associated with the phrases in the index.
 	private List<T> values;
@@ -50,20 +50,20 @@ public class TextIndex<T>
 	private boolean isCaseSensitive = false;
 
 	/**
-	 * Constructs a new TextIndex without case sensitivity.
+	 * Constructs a new SuffixIndex without case sensitivity.
      */
-	public TextIndex()
+	public SuffixIndex()
 	{
-		this.root = new TextNode();
+		this.root = new SuffixNode();
 		this.values = new CopyOnWriteArrayList<>();
 	}
 
 	/**
-	 * Constructs a new TextIndex with the given case sensitivity.
+	 * Constructs a new SuffixIndex with the given case sensitivity.
 	 *
 	 * @param isCaseSensitive True if the index is case sensitive, false otherwise.
 	 */
-	public TextIndex(boolean isCaseSensitive)
+	public SuffixIndex(boolean isCaseSensitive)
 	{
 		this();
 		setCaseSensitive(isCaseSensitive);
@@ -74,9 +74,9 @@ public class TextIndex<T>
 	 * before inserting any values.
 	 *
 	 * @param value True if the index is case sensitive, false otherwise.
-	 * @return The TextIndex instance for chaining.
+	 * @return The SuffixIndex instance for chaining.
 	 */
-	public TextIndex<T> setCaseSensitive(boolean value)
+	public SuffixIndex<T> setCaseSensitive(boolean value)
 	{
 		this.isCaseSensitive = value;
 		return this;
@@ -97,9 +97,9 @@ public class TextIndex<T>
 	 *
 	 * @param phrase The phrase to associate with the value.
 	 * @param value  The value to associate with the phrase.
-	 * @return The TextIndex instance for chaining.
+	 * @return The SuffixIndex instance for chaining.
 	 */
-	public TextIndex<T> insert(String phrase, T value)
+	public SuffixIndex<T> insert(String phrase, T value)
 	{
 		if (phrase == null || phrase.isEmpty()) return this;
 
@@ -148,7 +148,7 @@ public class TextIndex<T>
 	 * @param index  The index into the current query character being processed.
 	 * @param current The current node in the phrase index.
 	 */
-	private Set<Integer> getIndicesFor(char[] query, int index, TextNode current)
+	private Set<Integer> getIndicesFor(char[] query, int index, SuffixNode current)
 	{
 		if (query == null || query.length == 0) return Collections.emptySet();
 		if (index == query.length) return current.getIndices();
@@ -158,7 +158,7 @@ public class TextIndex<T>
 
 		if (c == ZERO_OR_MORE_WILDCARD) // Match zero or more characters.
 		{
-			for (TextNode child : current.getChildren())
+			for (SuffixNode child : current.getChildren())
 			{
 				indices.addAll(getIndicesFor(query, index, child));
 				indices.addAll(getIndicesFor(query, index + 1, child));
@@ -166,7 +166,7 @@ public class TextIndex<T>
 		}
 		else if (c == SINGLE_CHARACTER_WILDCARD) // Match any single character.
 		{
-			for (TextNode child : current.getChildren())
+			for (SuffixNode child : current.getChildren())
 			{
 				indices.addAll(getIndicesFor(query, index + 1, child));
 			}
@@ -175,7 +175,7 @@ public class TextIndex<T>
 		}
 		else // Exact match.
 		{
-			TextNode child = current.getChild(c);
+			SuffixNode child = current.getChild(c);
 
 			if (child != null)
 			{
@@ -194,7 +194,7 @@ public class TextIndex<T>
 	 */
 	private void insertSuffix(String suffix, int index)
 	{
-		TextNode current = root;
+		SuffixNode current = root;
 
 		for (char c : suffix.toCharArray())
 		{

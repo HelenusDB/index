@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.trie;
+package com.helenusdb.katalog.suffix;
 
 public class User {
 	// The first name of the user.

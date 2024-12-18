@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.trie;
+package com.helenusdb.katalog.suffix;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-class TextIndexTest {
+class SuffixIndexTest {
 	private static final String DOG_PHRASE = "the lazy brown dog takes a nap";
 	private static final Integer DOG_INDEX = 0;
 	private static final String FOX_PHRASE = "the quick brown fox jumps over the lazy dog";
@@ -21,7 +21,7 @@ class TextIndexTest {
 
 	@Test
 	void shouldConstructTrie() {
-		TextIndex<String> index = new TextIndex<>();
+		SuffixIndex<String> index = new SuffixIndex<>();
 		index.insert("banana", null);
 		assertTrue(index.getIndicesFor("banana").contains(0));
 	}
@@ -34,7 +34,7 @@ class TextIndexTest {
             new User("Charlie", "Lane", 35, "Bigtown, USA"),
             new User("David", "Smith", 40, "Hometown, USA")
         );
-		TextIndex<User> index = new TextIndex<>();
+		SuffixIndex<User> index = new SuffixIndex<>();
 		index.insert("Alice Brown", users.get(0));
 		index.insert("Bob Barker", users.get(1));
 		index.insert("Charlie Lane", users.get(2));
@@ -53,9 +53,11 @@ class TextIndexTest {
 
 	@Test
 	void shouldIndexStrings() {
-		TextIndex<String> index = new TextIndex<>();
-		index.insert(FOX_PHRASE, FOX_PHRASE).insert(DOG_PHRASE, DOG_PHRASE).insert(MOOSE_PHRASE, MOOSE_PHRASE)
-				.insert(MOUSE_PHRASE, MOUSE_PHRASE);
+		SuffixIndex<String> index = new SuffixIndex<>();
+		index.insert(FOX_PHRASE, FOX_PHRASE)
+			.insert(DOG_PHRASE, DOG_PHRASE)
+			.insert(MOOSE_PHRASE, MOOSE_PHRASE)
+			.insert(MOUSE_PHRASE, MOUSE_PHRASE);
 
 		assertTrue(index.search("").isEmpty());
 		assertTrue(index.search(null).isEmpty());
@@ -73,7 +75,7 @@ class TextIndexTest {
 
 	@Test
 	void shouldIndexNull() {
-		TextIndex<Object> index = new TextIndex<>();
+		SuffixIndex<Object> index = new SuffixIndex<>();
 		index.insert(DOG_PHRASE, null).insert(FOX_PHRASE, null).insert(MOOSE_PHRASE, null).insert(MOUSE_PHRASE, null);
 
 		assertTrue(index.getIndicesFor("").isEmpty());
@@ -93,7 +95,7 @@ class TextIndexTest {
 	@Test
 	void shouldBeCaseSensitive() {
 		final String upperFox = FOX_PHRASE.toUpperCase();
-		TextIndex<String> index = new TextIndex<>(true);
+		SuffixIndex<String> index = new SuffixIndex<>(true);
 		index.insert(FOX_PHRASE, FOX_PHRASE).insert(DOG_PHRASE, DOG_PHRASE).insert(MOOSE_PHRASE, MOOSE_PHRASE)
 				.insert(MOUSE_PHRASE, MOUSE_PHRASE).insert(upperFox, upperFox);
 
@@ -107,7 +109,7 @@ class TextIndexTest {
 
 	@Test
 	void shouldSupportWildcards() {
-		TextIndex<String> index = new TextIndex<>();
+		SuffixIndex<String> index = new SuffixIndex<>();
 		index.insert(FOX_PHRASE, FOX_PHRASE).insert(DOG_PHRASE, DOG_PHRASE).insert(MOOSE_PHRASE, MOOSE_PHRASE)
 				.insert(MOUSE_PHRASE, MOUSE_PHRASE);
 
