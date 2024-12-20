@@ -88,22 +88,6 @@ public class InvertedWordIndex<T>
 	}
 
 	/**
-	 * Normalizes the phrase by converting it to lower case if the index is not case sensitive.
-	 * 
-	 * @param phrase The phrase to normalize.
-	 * @return The normalized phrase.
-	 */
-	private String normalizePhrase(String phrase)
-	{
-		if (phrase == null)
-		{
-			return "";
-		}
-
-		return isCaseSensitive ? phrase : phrase.toLowerCase();
-	}
-
-	/**
 	 * Searches for all phrases containing the query substring.
 	 * 
 	 * @param query The query string to search for.
@@ -140,5 +124,21 @@ public class InvertedWordIndex<T>
 		}
 
 		return resultIndices;
+	}
+
+	/**
+	 * Normalizes the phrase by converting it to lower case if the index is not case sensitive.
+	 * 
+	 * @param phrase The phrase to normalize.
+	 * @return The normalized phrase.
+	 */
+	private String normalizePhrase(String phrase)
+	{
+		if (phrase == null)
+		{
+			return "";
+		}
+
+		return isCaseSensitive ? phrase : phrase.toLowerCase();
 	}
 }
