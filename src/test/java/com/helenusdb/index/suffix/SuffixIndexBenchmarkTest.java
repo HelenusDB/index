@@ -1,27 +1,28 @@
-package com.helenusdb.katalog.inverted;
+package com.helenusdb.index.suffix;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-import com.helenusdb.katalog.Corpus;
+import com.helenusdb.index.Corpus;
+import com.helenusdb.index.suffix.SuffixIndex;
 
-class InvertedWordIndexBenchmarkTest
+class SuffixIndexBenchmarkTest
 {
 	private static final int SEARCHES = 10000;
 
 	@Test
 	void test()
 	{
-		System.out.println("\nInverted Word Index Benchmark:");
-		InvertedWordIndex<String> index = timeIndexing();
+		System.out.println("\nSuffix Index Benchmark:");
+		SuffixIndex<String> index = timeIndexing();
 		assertNotNull(index);
 		timeSearch(index);
 	}
 
-	private InvertedWordIndex<String> timeIndexing()
+	private SuffixIndex<String> timeIndexing()
 	{
-		InvertedWordIndex<String> index = new InvertedWordIndex<>();
+		SuffixIndex<String> index = new SuffixIndex<>();
 		long start = System.currentTimeMillis();
 
 		for (String description : Corpus.DESCRIPTIONS)
@@ -37,7 +38,7 @@ class InvertedWordIndexBenchmarkTest
 		return index;
 	}
 
-	private void timeSearch(InvertedWordIndex<String> index)
+	private void timeSearch(SuffixIndex<String> index)
 	{
 		String[] phrases = { "waxing kit", "eco-friendly", "gaming keyboard", "water bottle", "wireless charging pad",
 			"usb-c", "anti-bacterial", "lip balm", "earbuds" };

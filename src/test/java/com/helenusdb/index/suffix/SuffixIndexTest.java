@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.suffix;
+package com.helenusdb.index.suffix;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+
+import com.helenusdb.index.suffix.SuffixIndex;
 
 class SuffixIndexTest {
 	private static final String DOG_PHRASE = "the lazy brown dog takes a nap";

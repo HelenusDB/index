@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.bplustree;
+package com.helenusdb.index.bplustree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,12 +6,14 @@ import java.util.List;
 /**
  * Represents a leaf node in a B+Tree that contains keys and values.
  * The values are the data stored in the tree. Leaf nodes are the only nodes
- * that contain data. They are linked together to form linked list at the leaf layer
- * that facilitates ordered access.
+ * that contain data. They are linked together to form a double-linked list
+ * at the leaf layer that facilitates ordered access.
  * 
  * @author Todd Fredrich
  * @param <K> the type of the keys in the node. Must implement Comparable.
  * @param <V> the type of the values stored in the node.
+ * @see Node
+ * @see AbstractNode
  */
 class LeafNode<K extends Comparable<K>, V>
 extends AbstractNode<K, V>

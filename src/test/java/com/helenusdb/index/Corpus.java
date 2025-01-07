@@ -1,4 +1,4 @@
-package com.helenusdb.katalog;
+package com.helenusdb.index;
 
 public final class Corpus
 {

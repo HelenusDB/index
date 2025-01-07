@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.suffix;
+package com.helenusdb.index.suffix;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.helenusdb.katalog.suffix.SuffixNode;
+import com.helenusdb.index.suffix.SuffixNode;
 
 class SuffixNodeTest
 {

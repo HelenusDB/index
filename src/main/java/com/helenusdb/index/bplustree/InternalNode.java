@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.bplustree;
+package com.helenusdb.index.bplustree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
  * 
  * @author Todd Fredrich
  * @param <K> the type of the keys in the node. Must implement Comparable.
- * @param <V> the type of the values in the node.
+ * @param <V> the type of the values in the leaf nodes.
  * @see Node
  * @see LeafNode
  */
@@ -65,7 +65,7 @@ extends AbstractNode<K, V>
 	@Override
 	public InternalNode<K, V> split(int order)
 	{
-		int mid = (order + 1) / 2;
+		int mid = getMiddleKeyIndex(order);
 
 		if (mid > size())
 		{

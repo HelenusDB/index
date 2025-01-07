@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.bplustree;
+package com.helenusdb.index.bplustree;
 
 public interface Node<K extends Comparable<K>, V>
 {

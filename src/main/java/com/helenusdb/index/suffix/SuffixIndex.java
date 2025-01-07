@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.suffix;
+package com.helenusdb.index.suffix;
 
 import java.util.Collections;
 import java.util.HashSet;

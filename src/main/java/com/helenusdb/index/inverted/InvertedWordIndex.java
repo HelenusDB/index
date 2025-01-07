@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.inverted;
+package com.helenusdb.index.inverted;
 
 import java.util.*;
 

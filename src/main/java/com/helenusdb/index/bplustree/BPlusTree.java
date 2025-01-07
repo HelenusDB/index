@@ -1,23 +1,18 @@
-package com.helenusdb.katalog.bplustree;
+package com.helenusdb.index.bplustree;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class Index<K extends Comparable<K>, V>
+public class BPlusTree<K extends Comparable<K>, V>
 {
-/*	private int order;
+	private int order;
 	private int mid;
 	private Node<K, V> root;
 
-	public Index(int order)
+	public BPlusTree(int order)
 	{
 		this.order = order;
-		this.mid = (order + 1) / 2;
 		this.root = new LeafNode<>();
 	}
 
-	public void insert(K key, V value)
+/*	public void insert(K key, V value)
 	{
 		Node<K, V> currentNode = root;
 

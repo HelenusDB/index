@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.bplustree;
+package com.helenusdb.index.bplustree;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+
+import com.helenusdb.index.bplustree.LeafNode;
 
 class LeafNodeTest
 {

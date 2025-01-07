@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.bplustree;
+package com.helenusdb.index.bplustree;
 
 import java.util.ArrayList;
 import java.util.Collections;

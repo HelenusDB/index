@@ -1,4 +1,4 @@
-package com.helenusdb.katalog;
+package com.helenusdb.index;
 
 import java.util.ArrayList;
 import java.util.Arrays;

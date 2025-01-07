@@ -1,4 +1,4 @@
-package com.helenusdb.katalog.inverted;
+package com.helenusdb.index.inverted;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+
+import com.helenusdb.index.inverted.InvertedWordIndex;
 
 class InvertedWordIndexTest
 {
