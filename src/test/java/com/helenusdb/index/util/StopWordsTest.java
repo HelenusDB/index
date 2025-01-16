@@ -89,8 +89,8 @@ class StopWordsTest {
 	}
 
 	@Test
-	void shouldFilterEnglish() {
-		List<String> filteredTokens = StopWords.english().filter(TEXT);
+	void shouldFilterGeneralText() {
+		List<String> filteredTokens = StopWords.generalText().filter(TEXT);
 
 		assertEquals(6, filteredTokens.size());
 		assertTrue(filteredTokens.contains("quick"));
@@ -106,6 +106,45 @@ class StopWordsTest {
 		assertFalse(filteredTokens.contains("over"));
 		assertFalse(filteredTokens.contains("by"));
 	}
+
+	@Test
+	void shouldFilterEnglish() {
+		List<String> filteredTokens = StopWords.english().filter(TEXT);
+
+		assertEquals(7, filteredTokens.size());
+		assertTrue(filteredTokens.contains("quick"));
+		assertTrue(filteredTokens.contains("brown"));
+		assertTrue(filteredTokens.contains("fox"));
+		assertTrue(filteredTokens.contains("jumps"));
+		assertTrue(filteredTokens.contains("over"));
+		assertTrue(filteredTokens.contains("lazy"));
+		assertTrue(filteredTokens.contains("dog"));
+
+		assertFalse(filteredTokens.contains("The"));
+		assertFalse(filteredTokens.contains("the"));
+		assertFalse(filteredTokens.contains("and"));
+		assertFalse(filteredTokens.contains("by"));
+	}
+
+	@Test
+	void shouldFilterInnoDB() {
+		List<String> filteredTokens = StopWords.innoDb().filter(TEXT);
+
+		assertEquals(8, filteredTokens.size());
+		assertTrue(filteredTokens.contains("quick"));
+		assertTrue(filteredTokens.contains("and"));
+		assertTrue(filteredTokens.contains("brown"));
+		assertTrue(filteredTokens.contains("fox"));
+		assertTrue(filteredTokens.contains("jumps"));
+		assertTrue(filteredTokens.contains("over"));
+		assertTrue(filteredTokens.contains("lazy"));
+		assertTrue(filteredTokens.contains("dog"));
+
+		assertFalse(filteredTokens.contains("The"));
+		assertFalse(filteredTokens.contains("the"));
+		assertFalse(filteredTokens.contains("by"));
+	}
+
 
 	@Test
 	void shouldHandleNull() {
