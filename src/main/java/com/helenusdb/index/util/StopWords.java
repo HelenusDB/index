@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * A utility class for filtering out stop words from text. This is useful for text analysis and search indexing.
@@ -22,6 +23,43 @@ public class StopWords
 	public static final String[] MINIMAL = { "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in",
 		"into", "is", "it", "no", "not", "of", "on", "or", "such", "that", "the", "their", "then", "there", "these",
 		"they", "this", "to", "was", "will", "with" };
+
+	/**
+	 * A list of pronouns used in the Porter2 stemmer.
+	 * 
+	 * @see https://snowballstem.org/algorithms/english/stop.txt
+	 */
+	public static final String[] SNOWBALL_PRONOUNS = { "i", "me", "my", "myself", "we", "us", "our", "ours", "ourselves", "you",
+		"your", "yours", "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it",
+		"its", "itself", "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this",
+		"that", "these", "those" };
+
+	/**
+	 * A list of verb forms used in the Porter2 stemmer.
+	 * 
+	 * @see https://snowballstem.org/algorithms/english/stop.txt
+	 */
+	public static final String[] SNOWBALL_VERB_FORMS = { "am", "is", "are", "was", "were", "be", "been", "being", "have", "has",
+		"had", "having", "do", "does", "did", "doing", "would", "should", "could", "ought" };
+
+	/**
+	 * A list of other common stop words used in the Porter2 stemmer.
+	 * 
+	 * @see https://snowballstem.org/algorithms/english/stop.txt
+	 */
+	public static final String[] SNOWBALL_OTHER = { "and", "but", "if", "or", "because", "as", "until", "while", "of", "at",
+		"by", "for", "with", "about", "against", "between", "into", "through", "during", "before", "after", "above",
+		"below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again", "further", "then",
+		"once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "most",
+		"other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very" };
+
+	/**
+	 * A list of stop words used in the Porter2 stemmer.
+	 * 
+	 * @see https://snowballstem.org/algorithms/english/stop.txt
+	 */
+	public static final String[] SNOWBALL_ALL = Stream.of(SNOWBALL_PRONOUNS, SNOWBALL_VERB_FORMS, SNOWBALL_OTHER)
+		.flatMap(Stream::of).toArray(String[]::new);
 
 	/**
 	 * A list of stop words commonly used in the InnoDB storage engine.
@@ -90,21 +128,52 @@ public class StopWords
 
 	private Set<String> wordSet;
 
+	/**
+	 * Factory method to create a StopWords instance with the Snowball stop words list from the Porter2 stemmer.
+	 * 
+	 * @return a new StopWords instance.
+	 * @see <a href="https://snowballstem.org/algorithms/english/stop.txt">Snowball Stop Words</a>
+	 */
+	public static StopWords snowball()
+	{
+		return new StopWords(SNOWBALL_ALL);
+	}
+
+	/**
+	 * Factory method to create a StopWords instance with the minimal stop words list.
+	 * 
+	 * @return a new StopWords instance.
+	 */
 	public static StopWords minimal()
 	{
 		return new StopWords(MINIMAL);
 	}
 
+	/**
+	 * Factory method to create a StopWords instance with the InnoDB stop words list.
+	 * 
+	 * @return a new StopWords instance.
+	 */
 	public static StopWords innoDb()
 	{
 		return new StopWords(INNODB);
 	}
 
+	/**
+	 * Factory method to create a StopWords instance with the English stop words list.
+	 * 
+	 * @return a new StopWords instance.
+	 */
 	public static StopWords english()
 	{
 		return new StopWords(ENGLISH);
 	}
 
+	/**
+	 * Factory method to create a StopWords instance with the general text stop words list.
+	 * 
+	 * @return a new StopWords instance.
+	 */
 	public static StopWords generalText()
 	{
 		return new StopWords(GENERAL_TEXT);
@@ -141,7 +210,18 @@ public class StopWords
 	}
 
 	/**
-	 * Sets the stop words list.
+	 * Adds multiple words to the stop words list.
+	 * 
+	 * @param words the words to add.
+	 */
+	public StopWords addAll(String[] words)
+	{
+		wordSet.addAll(Arrays.asList(words));
+		return this;
+	}
+
+	/**
+	 * Initializes the stop words list.
 	 * 
 	 * @param words the new stop words list.
 	 */
@@ -150,13 +230,19 @@ public class StopWords
 		this.wordSet = new HashSet<>(Arrays.asList(words));
 	}
 
+	/**
+	 * Returns a copy of the internal stop words list.
+	 * 
+	 * @return the stop words list.
+	 */
 	public String[] get()
 	{
 		return wordSet.toArray(new String[0]);
 	}
 
 	/**
-	 * Tokenizes the input text, removes punctuation, converts to lowercase, and filters out stop words.
+	 * Tokenizes the input text, removes punctuation, converts to lowercase, and filters out stop words
+	 * based on the internal stop words list.
 	 *
 	 * @param text the input text
 	 * @return a list of filtered tokens
