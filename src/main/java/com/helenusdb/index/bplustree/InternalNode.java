@@ -35,7 +35,8 @@ extends AbstractNode<K, V>
 		return children.get(getKeyIndex(key));
 	}
 
-	public V traverse(K key) {
+	public V traverse(K key)
+	{
 		Node<K, V> current = this;
 
 		while (!current.isLeaf()) {
