@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.helenusdb.index.bplustree.LeafNode;
-
 class LeafNodeTest
 {
 	@Test
@@ -27,10 +25,10 @@ class LeafNodeTest
 	void shouldInsert()
 	{
 		LeafNode<Integer, String> node = new LeafNode<>();
-		node.insert(2, "two");
-		node.insert(2, "two-also");
 		node.insert(3, "three");
+		node.insert(2, "two");
 		node.insert(1, "one");
+		node.insert(2, "two-also");
 		assertEquals(3, node.size());
 		assertEquals("one", node.search(1));
 		assertEquals("two-also", node.search(2));

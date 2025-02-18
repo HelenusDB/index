@@ -7,9 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import com.helenusdb.index.bplustree.InternalNode;
-import com.helenusdb.index.bplustree.LeafNode;
-
 class InternalNodeTest
 {
 	@Test
@@ -34,7 +31,7 @@ class InternalNodeTest
 		three.insert(3, new LeafNode<>(3, "three"), null);
 		node.insert(3, three, null);
 		node.insert(1, one, three);
-		node.insert(2, two, null);
+		node.insert(2, two, three);
 		assertEquals(3, node.size());
 		assertEquals("one", node.traverse(1));
 		assertEquals("two", node.traverse(2));
@@ -51,8 +48,8 @@ class InternalNodeTest
 		two.insert(2, new LeafNode<>(2, "two"), null);
 		InternalNode<Integer, String> three = new InternalNode<>();
 		three.insert(3, new LeafNode<>(3, "three"), null);
-		node.insert(1, one, null);
-		node.insert(2, two, null);
+		node.insert(1, one, two);
+		node.insert(2, two, three);
 		node.insert(3, three, null);
 		assertEquals(3, node.size());
 		assertEquals("one", node.traverse(1));
@@ -64,11 +61,15 @@ class InternalNodeTest
 	void shouldSplitOrderThree()
 	{
 		InternalNode<Integer, String> node = new InternalNode<>();
-		node.insert(1, new LeafNode<>(1, "one"), null);
-		node.insert(3, new LeafNode<>(3, "three"), null);
-		node.insert(2, new LeafNode<>(2, "two"), null);
-		assertEquals(3, node.getMiddleKey(3).intValue());
-		InternalNode<Integer, String> sibling = node.split(3);
+		LeafNode<Integer, String> one = new LeafNode<>(1, "one");
+		LeafNode<Integer, String> two = new LeafNode<>(2, "two");
+		LeafNode<Integer, String> three = new LeafNode<>(3, "three");
+		node.insert(1, one, null);
+		node.insert(3, three, null);
+		node.insert(2, two, three);
+		int order = 3;
+		assertEquals(3, node.getMiddleKey(order).intValue());
+		InternalNode<Integer, String> sibling = node.split(order);
 		assertNotNull(sibling);
 		assertEquals(1, sibling.size());
 		assertEquals(2, node.size());
