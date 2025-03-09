@@ -1,6 +1,6 @@
-# HelenusDB Katalog
+# HelenusDB Index
 
-**Indexing Magic for Cassandra**
+**In-Memory Indexing Magic for Cassandra**
 
 Full-text search with TextIndex:
 
