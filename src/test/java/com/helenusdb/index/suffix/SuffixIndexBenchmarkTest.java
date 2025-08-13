@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 
 import com.helenusdb.index.Corpus;
-import com.helenusdb.index.suffix.SuffixIndex;
 
 class SuffixIndexBenchmarkTest
 {
